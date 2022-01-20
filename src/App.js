@@ -1,25 +1,84 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Weather from './components/Weather';
+import Form from './components/Form';
+import Error from './components/error/Error';
+import Spinner from './components/loader/Spinner';
+import { Box, Paper, CssBaseline} from '@mui/material';
+import Image from './images/rodion-kutsaev-8P-uQaTd8rw-unsplash.jpg'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+
+    const [forecast, setForecast ] = useState('');
+    const [location, setLocation] = useState(null);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const KEY = 'f38c1572bad64fcb93342449220301';
+    // const KEY = '52f076c6d1819664a1604d58dd0bed28';
+    useEffect(()=> {
+        if(location) {
+            getForecast();
+        }
+    }, [location]);
+
+    // const getForecast = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${KEY}&cnt=7&units=metric`);
+    //         if (response.status !=200) {
+    //             const errorMessage =  { code : response.status, message : 'response not ok' };
+    //             throw errorMessage;
+    //         }
+    //         const data = await response.json();
+    //          console.log(data);
+    //          setForecast(data); 
+    //      } catch (error) {
+    //          console.error(error);
+    //          setError(true);
+    //      } finally {
+    //          setLoading(false); 
+    //      }
+    //     }
+    
+    const getForecast = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&days=6&aqi=no&alerts=no`);
+            if (response.status !== 200) {
+                const errorMessage =  { code : response.status, message : 'response not ok' };
+                throw errorMessage;
+            }
+            const data = await response.json();
+            console.log(data);
+            setForecast(data); 
+        } catch (error) {
+            console.error(error);
+            setError(true);
+        } finally {
+            setLoading(false); 
+        }
+    };
+
+    const styles = {
+        paper: {
+            backgroundImage: `url(${Image})`,
+            backgroundSize: "cover",
+            minHeight: "100vh"
+        },
+    }
+
+    return (
+        <Paper style={styles.paper}>
+            <CssBaseline />
+            <Box sx={{ pt: "1.8rem"}}>
+                <Form location={location} setLocation={setLocation} />
+                {error && <Error />}
+                {loading && <Spinner />}
+                {forecast && <Weather forecast={forecast} /> }
+            </Box>
+        </Paper>
+
+    );
+};
 
 export default App;
