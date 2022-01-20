@@ -14,31 +14,13 @@ const App = () => {
     const [loading, setLoading] = useState(false);
 
     const KEY = 'f38c1572bad64fcb93342449220301';
-    // const KEY = '52f076c6d1819664a1604d58dd0bed28';
+
     useEffect(()=> {
         if(location) {
             getForecast();
         }
     }, [location]);
 
-    // const getForecast = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${KEY}&cnt=7&units=metric`);
-    //         if (response.status !=200) {
-    //             const errorMessage =  { code : response.status, message : 'response not ok' };
-    //             throw errorMessage;
-    //         }
-    //         const data = await response.json();
-    //          console.log(data);
-    //          setForecast(data); 
-    //      } catch (error) {
-    //          console.error(error);
-    //          setError(true);
-    //      } finally {
-    //          setLoading(false); 
-    //      }
-    //     }
     
     const getForecast = async () => {
         setLoading(true);
