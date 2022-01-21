@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 
 const Error = () => {
     return (
-        <Grid >Error xd</Grid>
+        <Grid textAlign="center" sx={{mt: 2}}>Error. Please enter the location again.</Grid>
     );
 };
 
